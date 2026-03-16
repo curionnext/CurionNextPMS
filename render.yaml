@@ -1,0 +1,22 @@
+services:
+  # Frontend Service (Static Site)
+  - type: web
+    name: CurionNextPMS-Frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install; npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://curionnextpms-backend.onrender.com/api
+
+  # Backend Service (Node.js)
+  - type: web
+    name: CurionNextPMS-Backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install; npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production

@@ -1,0 +1,27 @@
+﻿PASS | Login | JWT obtained
+PASS | Wrong Password | Status: 401
+PASS | Missing Fields | Status: 400
+PASS | Auth Me | User: admin
+PASS | No Token Rejected | Status: 401
+PASS | Property Profile | Name: 
+PASS | List Rooms | Count: 
+PASS | List Room Types | Count: 
+PASS | Tax Config | Loaded
+PASS | List Floors | Count: 
+PASS | List Reservations | Count: 3
+PASS | Check Availability | Loaded
+PASS | Create Guest | ID: 
+PASS | List Guests | Count: 
+PASS | Dashboard Summary | Loaded
+PASS | Alerts | Loaded
+PASS | Revenue Report | Loaded
+PASS | OTA Channels | Loaded
+PASS | OTA Sync Logs | Loaded
+PASS | WhatsApp Config | Loaded
+PASS | Multi-Property List | Loaded
+PASS | Night Audit List | Loaded
+PASS | Night Audit Latest | Loaded
+PASS | Night Audit Check | Loaded
+PASS | Transaction Logs | Loaded
+PASS | Logout | Shift closed
+---SUMMARY: PASS=26 FAIL=0---

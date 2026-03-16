@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5% 64.9%;
+  }
+
+  html {
+    font-size: 16px;
+  }
+
+  * {
+    @apply border-zinc-200;
+  }
+
+  body {
+    @apply antialiased bg-white text-zinc-900;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-zinc-950;
+  }
+}
+
+@layer components {
+  /* Catalyst-inspired component styles */
+  .sidebar-nav-item {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors;
+    @apply text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900;
+  }
+  
+  .sidebar-nav-item-active {
+    @apply bg-zinc-100 text-zinc-900 font-medium hover:bg-zinc-100 hover:text-zinc-900;
+  }
+
+  .table-row {
+    @apply border-b border-zinc-200 transition-colors hover:bg-zinc-50;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-zinc-900;
+  }
+
+  .form-input {
+    @apply rounded-lg border-zinc-300 shadow-sm focus:border-zinc-900 focus:ring-zinc-900;
+  }
+
+  /* Sidebar scrollbar styles */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    overflow-y: overlay;
+  }
+
+  .sidebar-scroll:hover {
+    scrollbar-color: #a1a1aa transparent;
+  }
+
+  /* Webkit browsers (Chrome, Safari, Edge) - Force overlay and remove arrows */
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 3px;
+    height: 0px;
+    background: transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    border: none;
+    margin: 0;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-track-piece {
+    background: transparent;
+    border: none;
+    margin: 0;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 2px;
+    border: none;
+  }
+
+  .sidebar-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: #a1a1aa;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: #71717a;
+  }
+
+  /* Completely remove ALL scrollbar arrows/buttons */
+  .sidebar-scroll::-webkit-scrollbar-button {
+    display: block;
+    height: 0px;
+    width: 0px;
+    border: none;
+    background: transparent;
+    background-image: none;
+    background-size: 0 0;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-button:single-button:vertical:decrement,
+  .sidebar-scroll::-webkit-scrollbar-button:single-button:vertical:increment {
+    display: block;
+    height: 0px;
+    border: none;
+    background: transparent;
+  }
+
+  /* Target specific button positions */
+  .sidebar-scroll::-webkit-scrollbar-button:vertical:start:decrement {
+    height: 0px;
+    background: transparent;
+  }
+
+  .sidebar-scroll::-webkit-scrollbar-button:vertical:end:increment {
+    height: 0px;
+    background: transparent;
+  }
+}

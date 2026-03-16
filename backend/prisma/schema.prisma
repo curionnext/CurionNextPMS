@@ -1,0 +1,554 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["secure"]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  hotelId      String
+  hotelCode    String
+  username     String   @unique
+  email        String   @unique
+  displayName  String
+  roles        String[]
+  passwordHash String
+  status       String   @default("ACTIVE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Room {
+  id           String   @id @default(cuid())
+  hotelId      String
+  hotelCode    String
+  number       String
+  name         String?
+  type         String
+  roomTypeId   String
+  status       String
+  rate         Float
+  floor        Int?
+  floorId      String?
+  buildingId   String?
+  amenities    String[]
+  maxOccupancy Int?
+  hasExtraBed  Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([hotelCode, number])
+  @@schema("secure")
+}
+
+model RoomType {
+  id           String   @id @default(cuid())
+  hotelId      String
+  hotelCode    String
+  name         String
+  shortCode    String
+  description  String?
+  baseRate     Float
+  occupancy    Int
+  extraBedRate Float?
+  amenities    String[]
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Reservation {
+  id           String   @id @default(cuid())
+  hotelId      String
+  hotelCode    String
+  guestId      String
+  roomType     String
+  roomId       String?
+  status       String
+  arrivalDate  String
+  departureDate String
+  adults       Int
+  children     Int
+  nightlyRate  Float
+  ratePlan     String
+  source       String
+  otaReference String?
+  isWalkIn     Boolean  @default(false)
+  notes        String?
+  totalAmount  Float
+  balanceDue   Float
+  checkInAt    DateTime?
+  checkOutAt   DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Guest {
+  id            String   @id @default(cuid())
+  hotelId       String
+  hotelCode     String
+  firstName     String
+  lastName      String?
+  email         String?
+  phone         String?
+  addressLine1  String?
+  addressLine2  String?
+  city          String?
+  state         String?
+  country       String?
+  postalCode    String?
+  preferences   String[]
+  tags          String[]
+  notes         String?
+  visitCount    Int      @default(0)
+  stayHistory   String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Store {
+  id          String   @id @default(cuid())
+  hotelId     String
+  hotelCode   String
+  name        String
+  description String?
+  type        String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Vendor {
+  id            String   @id @default(cuid())
+  hotelId       String
+  hotelCode     String
+  name          String
+  contactPerson String?
+  email         String?
+  phone         String?
+  paymentTerms  String?
+  taxStatus     String?
+  isActive      Boolean  @default(true)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Shift {
+  id        String   @id @default(cuid())
+  hotelId   String
+  hotelCode String
+  userId    String
+  shiftName String
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Property {
+  id           String   @id @default(cuid())
+  hotelId      String   @unique
+  hotelCode    String   @unique
+  name         String
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  state        String?
+  country      String?
+  postalCode   String?
+  phone        String?
+  email        String?
+  timezone     String?
+  gstin        String?
+  updatedAt    DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model InventoryItem {
+  id              String   @id @default(cuid())
+  hotelId         String
+  hotelCode       String
+  sku             String
+  name            String
+  categoryId      String
+  unitOfMeasure   String
+  averageCost     Float
+  parLevel        Float
+  reorderQuantity Float
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Floor {
+  id        String   @id @default(cuid())
+  hotelId   String
+  hotelCode String
+  number    Int
+  name      String?
+  sortOrder Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model TaxConfig {
+  id                      String   @id @default(cuid())
+  hotelId                 String   @unique
+  hotelCode               String   @unique
+  gstEnabled              Boolean  @default(true)
+  cgst                    Float    @default(0)
+  sgst                    Float    @default(0)
+  igst                    Float    @default(0)
+  serviceChargeEnabled    Boolean  @default(false)
+  serviceChargePercentage Float    @default(0)
+  luxuryTaxEnabled        Boolean  @default(false)
+  luxuryTaxPercentage     Float    @default(0)
+  updatedAt               DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Bill {
+  id            String   @id @default(cuid())
+  hotelId       String
+  hotelCode     String
+  reservationId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  hotelId       String
+  hotelCode     String
+  reservationId String
+  folioId       String
+  amount        Float
+  currency      String   @default("INR")
+  mode          String
+  reference     String?
+  receivedAt    DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model HousekeepingTask {
+  id        String   @id @default(cuid())
+  hotelId   String
+  hotelCode String
+  roomId    String
+  assignedTo String?
+  priority  String?
+  status    String   @default("PENDING")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model MaintenanceRequest {
+  id          String   @id @default(cuid())
+  hotelId     String
+  hotelCode   String
+  roomId      String
+  title       String
+  description String?
+  priority    String
+  reportedBy  String?
+  status      String   @default("OPEN")
+  reportedAt  DateTime @default(now())
+  resolvedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  hotelId     String
+  hotelCode   String
+  name        String
+  category    String
+  price       Float
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  hotelId       String
+  hotelCode     String
+  source        String
+  tableId       String?
+  reservationId String?
+  guestName     String?
+  status        String   @default("DRAFT")
+  totalAmount   Float
+  kotNumber     String?
+  postedAt      DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model InventoryCategory {
+  id          String   @id @default(cuid())
+  hotelId     String
+  hotelCode   String
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model StockLedger {
+  id             String   @id @default(cuid())
+  hotelId        String
+  hotelCode      String
+  itemId         String
+  storeId        String
+  quantityOnHand Float    @default(0)
+  lastUpdated    DateTime @default(now())
+
+  @@unique([storeId, itemId])
+  @@schema("secure")
+}
+
+model Alert {
+  id           String   @id @default(cuid())
+  hotelId      String
+  hotelCode    String
+  type         String
+  status       String   @default("ACTIVE")
+  fingerprint  String
+  message      String
+  reservationId String?
+  roomId       String?
+  date         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  acknowledgedAt DateTime?
+  resolvedAt   DateTime?
+
+  @@schema("secure")
+}
+
+model NightAudit {
+  id            String   @id @default(cuid())
+  hotelId       String
+  hotelCode     String
+  businessDate  String
+  status        String   @default("PENDING")
+  startedAt     DateTime?
+  completedAt   DateTime?
+  startedBy     String?
+  summary       Json?
+  errors        String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model OTAChannel {
+  id           String   @id @default(cuid())
+  hotelId      String
+  hotelCode    String
+  provider     String
+  status       String
+  credentials  Json
+  mappings     Json
+  syncSettings Json
+  lastSyncAt   DateTime?
+  lastError    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model OTAReservationImport {
+  id                  String   @id @default(cuid())
+  hotelId             String
+  hotelCode           String
+  provider            String
+  otaConfirmationCode String
+  otaReservationData  Json
+  importedReservationId String?
+  status              String   @default("PENDING")
+  errorMessage        String?
+  importedAt          DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model OTASyncLog {
+  id             String   @id @default(cuid())
+  hotelId        String
+  hotelCode      String
+  channelId      String
+  provider       String
+  syncType       String
+  status         String
+  itemsProcessed Int      @default(0)
+  itemsFailed    Int      @default(0)
+  details        Json?
+  error          String?
+  syncedAt       DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  @@schema("secure")
+}
+
+model WhatsAppTemplate {
+  id          String   @id @default(cuid())
+  hotelId     String
+  hotelCode   String
+  type        String
+  name        String
+  templateId  String
+  language    String
+  category    String
+  parameters  String[]
+  content     String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model WhatsAppMessage {
+  id                String   @id @default(cuid())
+  hotelId           String
+  hotelCode         String
+  templateId        String
+  templateType      String
+  recipientPhone    String
+  recipientName     String?
+  parameters        Json
+  status            String   @default("QUEUED")
+  relatedEntityType String?
+  relatedEntityId   String?
+  sentAt            DateTime?
+  deliveredAt       DateTime?
+  readAt            DateTime?
+  failedAt          DateTime?
+  errorMessage      String?
+  externalMessageId String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model WhatsAppConfig {
+  id                String   @id @default(cuid())
+  hotelId           String   @unique
+  hotelCode         String   @unique
+  isEnabled         Boolean  @default(false)
+  provider          String
+  credentials       Json
+  automationSettings Json
+  lastTestedAt      DateTime?
+  lastTestStatus    String?
+  lastTestError     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model PropertyGroup {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  properties  String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model TransactionLog {
+  id            String   @id @default(cuid())
+  hotelId       String
+  hotelCode     String
+  eventType     String
+  entityType    String
+  entityId      String
+  userId        String
+  userName      String
+  timestamp     DateTime @default(now())
+  description   String
+  metadata      Json?
+  previousState Json?
+  newState      Json?
+  ipAddress     String?
+  userAgent     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("secure")
+}
+
+model PurchaseOrder {
+  id               String   @id @default(cuid())
+  hotelId          String
+  hotelCode        String
+  poNumber         String
+  vendorId         String
+  status           String   @default("DRAFT")
+  expectedDelivery DateTime?
+  items            Json
+  subtotal         Float
+  taxTotal         Float
+  grandTotal       Float
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@schema("secure")
+}
